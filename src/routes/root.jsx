@@ -1,3 +1,7 @@
+// 使用 Outlet 来在 layout 中标识子路由在哪里渲染
+import { Outlet } from "react-router-dom";
+
+
 export default function Root() {
 
     // 注意，errorElement 只能捕获一部分错误，并不是全部的错误
@@ -57,7 +61,9 @@ export default function Root() {
                     </ul>
                 </nav>
             </div>
-            <div id="detail"></div>
+            <div id="detail">
+                <Outlet />
+            </div>
         </>
     );
 }
