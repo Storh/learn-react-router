@@ -4,6 +4,7 @@ export default function Root() {
     // 主要处理这几种情况：
     // 1. React Router 所提供的功能中抛出的错误，代表就是 loaders 和 actions
     // 2. 路由不匹配的情况，如这个页面中 href 跳转的两个不存在的路由
+    //    <a href={`${不存在的路由地址}`}>Your Name</a>
     // 3. 渲染过程中出现的错误，如下面的代码。通过点击抛出的错误并不能被捕获，
     //    但是直接在 render 内容中抛出错误的话会被捕捉
 
