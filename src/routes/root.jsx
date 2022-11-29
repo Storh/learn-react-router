@@ -1,7 +1,8 @@
 // 使用 Outlet 来在 layout 中标识子路由在哪里渲染
 // 使用 Link 来进行路由的切换
-import { Outlet, Link } from "react-router-dom";
+import { Outlet, Link, useLoaderData } from "react-router-dom";
 // import { useEffect } from "react";
+import { getContacts } from "../contacts";
 
 export default function Root() {
 
@@ -16,9 +17,10 @@ export default function Root() {
     //    但是直接在 render 内容中抛出错误的话会被捕捉
 
     // 不会触发 errorElement
-    const functionError = () => {
-        throw new Error('自定义错误')
-    }
+    // <div style={{ cursor: "pointer" }} onClick={functionError}>My test</div>
+    // const functionError = () => {
+    //     throw new Error('自定义错误')
+    // }
 
     // 会触发 errorElement
     // throw new Error('自定义错误')
@@ -60,8 +62,9 @@ export default function Root() {
 
     // 最后一直就是要介绍的，使用 React Router 的写法，
     // 切换为 React Router 的 Link 标签去跳转到子路由。
-    // Link不但能解决上面的 URL 跳转错误的问题，还不会让页面重新加载。
-    
+    // Link 不但能解决上面的 URL 跳转错误的问题，还不会让页面重新加载。
+    // <Link to={`contacts/1`}>Your Name</Link>
+
     // 先不提 React Router 是如何解决这个问题的，首先想想我们有什么方法去处理上面的问题
     // 为了解决这个问题，要利用的就是 History API，pushState 方法可以改变页面的路由，同时也不会触发
     // 浏览器去加载或者检查 URL 上的文件，这一特性非常适合 SPA。
@@ -71,6 +74,14 @@ export default function Root() {
     // 但是经过查看文档和实验才发现， popstate 事件只能在页面前进和后退的时候才能被触发，
     // 也就是浏览器的前进后退事件和 history API 的 go 和 back 方法，pushState 和 replaceState 并不能触发。
     // 所以需要自己去添加 onload 事件的监听和对路由切换时的处理。
+
+    // ******有关数据加载******
+    const { contacts } = useLoaderData();
+
+    // 数据、路由和布局的耦合，所以有了 loader 这个功能，
+    // 每个路由都可以定义一个 loader 方法来在元素渲染前获取数据。
+    // 这个数据可以在 useLoaderData hook 中获取。
+    // 同时，这里学到的一个逻辑是，可以把 render 内容和 网络请求内容放到一个文件中， 利用两次导入来实现所需要的数据加载后再显示
 
     return (
         <>
@@ -100,17 +111,28 @@ export default function Root() {
                     </form>
                 </div>
                 <nav>
-                    <ul>
-                        <li>
-                            <Link to={`contacts/1`}>Your Name</Link>
-                        </li>
-                        <li>
-                            <Link to={`contacts/2`}>Your Friend</Link>
-                        </li>
-                        <li>
-                            <div style={{ cursor: "pointer" }} onClick={functionError}>My test</div>
-                        </li>
-                    </ul>
+                    {contacts.length ? (
+                        <ul>
+                            {contacts.map((contact) => (
+                                <li key={contact.id}>
+                                    <Link to={`contacts/${contact.id}`}>
+                                        {contact.first || contact.last ? (
+                                            <>
+                                                {contact.first} {contact.last}
+                                            </>
+                                        ) : (
+                                            <i>No Name</i>
+                                        )}{" "}
+                                        {contact.favorite && <span>★</span>}
+                                    </Link>
+                                </li>
+                            ))}
+                        </ul>
+                    ) : (
+                        <p>
+                            <i>No contacts</i>
+                        </p>
+                    )}
                 </nav>
             </div>
             <div id="detail">
@@ -118,4 +140,9 @@ export default function Root() {
             </div>
         </>
     );
+}
+
+export async function loader() {
+    const contacts = await getContacts();
+    return { contacts };
 }

@@ -6,7 +6,7 @@ import {
   Route,
 } from "react-router-dom";
 import "./index.css";
-import Root from "./routes/root";
+import Root, { loader as rootLoader } from "./routes/root";
 import ErrorPage from "./error-page";
 import Contact from "./routes/contact";
 
@@ -15,6 +15,7 @@ const router = createBrowserRouter([
     path: "/",
     element: <Root />,
     errorElement: <ErrorPage />,
+    loader: rootLoader,
     // 如果我们想使用某个固定的页面布局，需要将内容以 children 的方式来配置
     children: [
       {
