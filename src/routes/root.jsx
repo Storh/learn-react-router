@@ -1,8 +1,12 @@
 // 使用 Outlet 来在 layout 中标识子路由在哪里渲染
 // 使用 Link 来进行路由的切换
-import { Outlet, Link, useLoaderData } from "react-router-dom";
+import { Outlet, Link, useLoaderData, Form } from "react-router-dom";
 // import { useEffect } from "react";
-import { getContacts } from "../contacts";
+import { getContacts, createContact } from "../contacts";
+
+export async function action(e) {
+    await createContact();
+}
 
 export default function Root() {
 
@@ -106,9 +110,9 @@ export default function Root() {
                             aria-live="polite"
                         ></div>
                     </form>
-                    <form method="post">
+                    <Form method="post">
                         <button type="submit">New</button>
-                    </form>
+                    </Form>
                 </div>
                 <nav>
                     {contacts.length ? (
