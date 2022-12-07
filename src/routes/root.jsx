@@ -1,6 +1,7 @@
 // 使用 Outlet 来在 layout 中标识子路由在哪里渲染
 // 使用 Link 来进行路由的切换
-import { Outlet, Link, useLoaderData, Form, redirect } from "react-router-dom";
+// 将 Link 更换为 NavLink 来实现根据实际路由进行不同的样式展示
+import { Outlet, NavLink, useLoaderData, Form, redirect } from "react-router-dom";
 // import { useEffect } from "react";
 import { getContacts, createContact } from "../contacts";
 
@@ -120,7 +121,16 @@ export default function Root() {
                         <ul>
                             {contacts.map((contact) => (
                                 <li key={contact.id}>
-                                    <Link to={`contacts/${contact.id}`}>
+                                    <NavLink
+                                        to={`contacts/${contact.id}`}
+                                        className={({ isActive, isPending }) =>
+                                            isActive
+                                                ? "active"
+                                                : isPending
+                                                    ? "pending"
+                                                    : ""
+                                        }
+                                    >
                                         {contact.first || contact.last ? (
                                             <>
                                                 {contact.first} {contact.last}
@@ -129,7 +139,7 @@ export default function Root() {
                                             <i>No Name</i>
                                         )}{" "}
                                         {contact.favorite && <span>★</span>}
-                                    </Link>
+                                    </NavLink>
                                 </li>
                             ))}
                         </ul>
