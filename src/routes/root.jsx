@@ -1,11 +1,12 @@
 // 使用 Outlet 来在 layout 中标识子路由在哪里渲染
 // 使用 Link 来进行路由的切换
-import { Outlet, Link, useLoaderData, Form } from "react-router-dom";
+import { Outlet, Link, useLoaderData, Form, redirect } from "react-router-dom";
 // import { useEffect } from "react";
 import { getContacts, createContact } from "../contacts";
 
-export async function action(e) {
-    await createContact();
+export async function action() {
+    const contact = await createContact();
+    return redirect(`/contacts/${contact.id}/edit`);
 }
 
 export default function Root() {
