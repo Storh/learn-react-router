@@ -3,12 +3,12 @@ import { getContact } from "../contacts";
 
 // 可以获取 url 参数的 loader 函数
 export async function loader({ params }) {
-    return getContact(params.contantId);
+    return getContact(params.contactId);
 }
 
 export default function Contact() {
 
-    const contact = useLoaderData;
+    const contact = useLoaderData();
 
     return (
         <div id="contact">
