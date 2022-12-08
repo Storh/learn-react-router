@@ -10,7 +10,6 @@ export async function action({ request, params }) {
     // https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Iteration_protocols#the_iterable_protocol
 
     const updates = Object.fromEntries(formData);
-    console.log(updates)
     await updateContact(params.contactId, updates);
     return redirect(`/contacts/${params.contactId}`);
 }

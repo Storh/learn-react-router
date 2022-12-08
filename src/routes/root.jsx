@@ -1,7 +1,8 @@
 // 使用 Outlet 来在 layout 中标识子路由在哪里渲染
 // 使用 Link 来进行路由的切换
 // 将 Link 更换为 NavLink 来实现根据实际路由进行不同的样式展示
-import { Outlet, NavLink, useLoaderData, Form, redirect } from "react-router-dom";
+// useNavigation 钩子会返回当前 navigation 的所有信息，
+import { Outlet, NavLink, useLoaderData, Form, redirect, useNavigation } from "react-router-dom";
 // import { useEffect } from "react";
 import { getContacts, createContact } from "../contacts";
 
@@ -84,6 +85,8 @@ export default function Root() {
     // ******有关数据加载******
     const { contacts } = useLoaderData();
 
+    const navigation = useNavigation();
+
     // 数据、路由和布局的耦合，所以有了 loader 这个功能，
     // 每个路由都可以定义一个 loader 方法来在元素渲染前获取数据。
     // 这个数据可以在 useLoaderData hook 中获取。
@@ -150,7 +153,10 @@ export default function Root() {
                     )}
                 </nav>
             </div>
-            <div id="detail">
+            <div id="detail"
+                className={
+                    navigation.state === "loading" ? "loading" : ""
+                }>
                 <Outlet />
             </div>
         </>
