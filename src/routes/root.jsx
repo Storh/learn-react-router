@@ -137,7 +137,7 @@ export default function Root() {
                                             </>
                                         ) : (
                                             <i>No Name</i>
-                                        )}{" "}
+                                        )}
                                         {contact.favorite && <span>★</span>}
                                     </NavLink>
                                 </li>
