@@ -27,7 +27,7 @@ export default function Contact() {
                         </>
                     ) : (
                         <i>No Name</i>
-                    )}{" "}
+                    )}
                     <Favorite contact={contact} />
                 </h1>
 
@@ -50,6 +50,13 @@ export default function Contact() {
                     </Form>
                     <Form
                         method="post"
+                        // <Form> 的 action 可以像 <Link to> 一样填写一个相对值
+                        // 可以实现向添加了 action 内容的相对地址中提交 form 的情况
+                        // 而一旦向一个地址提交请求之后，就会去寻找对应的路由位置，如果找不到的话就会触发404
+                        // 所以也就需要给相对地址添加处理内容，给路由添加 action 函数
+                        // 同时要注意的是，一定得是Form这个 router 的组件才行，
+                        // 它对 form 的默认提交行为进行了拦截，再创建基于路由的post请求拦截
+                        // 然后根据 action 匹配的地址去发起请求
                         action="destroy"
                         onSubmit={(event) => {
                             if (
