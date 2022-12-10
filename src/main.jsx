@@ -37,6 +37,7 @@ const router = createBrowserRouter([
       {
         path: "contacts/:contactId/destroy",
         action: destroyAction,
+        // 如果一个路由有自己的 报错页面，那么就不会去寻找根路由的错误页面
         errorElement: <DeleteAgain />,
       },
     ],
