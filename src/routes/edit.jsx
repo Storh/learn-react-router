@@ -1,4 +1,4 @@
-import { Form, useLoaderData, redirect, } from "react-router-dom";
+import { Form, useLoaderData, redirect, useNavigate } from "react-router-dom";
 import { updateContact } from "../contacts";
 
 export async function action({ request, params }) {
@@ -18,6 +18,12 @@ export default function EditContact() {
 
     // ?? 空值合并运算符。当左侧的操作数为 null 或者 undefined 时，返回其右侧操作数，否则返回左侧操作数。
     const contact = useLoaderData() ?? {};
+
+    // useNavigate 是一个路由的钩子，主要适合在页面中使用，如果是在 action 和 loader中，
+    // 使用 redirect 来直接前往某个路由更加合适。
+    // 除了这个利用 history 堆栈，传递 -1 来实现后退的方法，
+    // 还有直接填入新的路由地址的使用方法，此时填入的是 To 值，实现类似于 <Link to> 的效果。
+    const navigate = useNavigate();
 
     return (
         <Form method="post" id="contact-form">
@@ -67,7 +73,9 @@ export default function EditContact() {
             </label>
             <p>
                 <button type="submit">Save</button>
-                <button type="button">Cancel</button>
+                <button type="button" onClick={() => {
+                    navigate(-1);
+                }}>Cancel</button>
             </p>
         </Form>
     );

@@ -1,4 +1,4 @@
-import { redirect } from "react-router-dom";
+import { redirect, useNavigate } from "react-router-dom";
 import { deleteContact } from "../contacts";
 
 export async function action({ params }) {
@@ -10,8 +10,9 @@ export async function action({ params }) {
 }
 
 const DeleteAgain = () => {
+    const navigate = useNavigate()
     const backPage = () => {
-        history.back()
+        navigate(-1);
     }
     return (
         <button onClick={backPage}>
