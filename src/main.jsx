@@ -7,6 +7,7 @@ import {
 } from "react-router-dom";
 import "./index.css";
 import Root, { loader as rootLoader, action as rootAction } from "./routes/root";
+import Index from "./routes/index";
 import ErrorPage from "./error-page";
 import Contact, { loader as contactLoader } from "./routes/contact";
 import EditContact, { action as editAction } from "./routes/edit";
@@ -23,6 +24,8 @@ const router = createBrowserRouter([
     action: rootAction,
     // 如果我们想使用某个固定的页面布局，需要将内容以 children 的方式来配置
     children: [
+      // 添加当前路由没有进入子路由，处于父路由的时候，布局的 Outlet 应该显示什么内容，也就是设置一个首页的含义
+      { index: true, element: <Index /> },
       {
         path: "contacts/:contactId",
         element: <Contact />,
