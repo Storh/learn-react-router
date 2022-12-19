@@ -97,6 +97,7 @@ export default function Root() {
             <div id="sidebar">
                 <h1>React Router Contacts</h1>
                 <div>
+                    {/* 注意，默认的方法是 GET 方法，所以获取参数的方式应该从路由的 loader 中获取，而不是 actions */}
                     <Form id="search-form" role="search">
                         <input
                             id="q"
@@ -163,7 +164,9 @@ export default function Root() {
     );
 }
 
+// 因为 form 的 GET 方法会触发页面导航，这样就可以在 loader 中获取路由的参数了
 export async function loader({ request }) {
+    // 从路由中获取参数的方法
     const url = new URL(request.url);
     const q = url.searchParams.get("q");
     const contacts = await getContacts(q);
