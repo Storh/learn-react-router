@@ -3,7 +3,7 @@ import { useEffect } from "react";
 // 使用 Link 来进行路由的切换
 // 将 Link 更换为 NavLink 来实现根据实际路由进行不同的样式展示
 // useNavigation 钩子会返回当前 navigation 的所有信息，
-import { Outlet, NavLink, useLoaderData, Form, redirect, useNavigation } from "react-router-dom";
+import { Outlet, NavLink, useLoaderData, Form, redirect, useNavigation, useSubmit } from "react-router-dom";
 // import { useEffect } from "react";
 import { getContacts, createContact } from "../contacts";
 
@@ -87,6 +87,7 @@ export default function Root() {
     const { contacts, q } = useLoaderData();
 
     const navigation = useNavigation();
+    const submit = useSubmit();
 
     // 对于搜索后，点击返回路由变化但是不触发 input 组件内容变化的解决
     // 因为给 input 设置 defaultValue 只是在刷新页面的时候控制 input 的内容显示，
@@ -94,6 +95,12 @@ export default function Root() {
     useEffect(() => {
         document.getElementById("q").value = q;
     }, [q]);
+
+    const searching =
+        navigation.location &&
+        new URLSearchParams(navigation.location.search).has(
+            "q"
+        );
 
     // 数据、路由和布局的耦合，所以有了 loader 这个功能，
     // 每个路由都可以定义一个 loader 方法来在元素渲染前获取数据。
@@ -109,16 +116,23 @@ export default function Root() {
                     <Form id="search-form" role="search">
                         <input
                             id="q"
+                            className={searching ? "loading" : ""}
                             aria-label="Search contacts"
                             placeholder="Search"
                             type="search"
                             name="q"
                             defaultValue={q}
+                            onChange={(event) => {
+                                const isFirstSearch = q == null;
+                                submit(event.currentTarget.form, {
+                                    replace: !isFirstSearch,
+                                });
+                            }}
                         />
                         <div
                             id="search-spinner"
                             aria-hidden
-                            hidden={true}
+                            hidden={!searching}
                         />
                         <div
                             className="sr-only"
