@@ -97,6 +97,11 @@ function Favorite({ contact }) {
     // yes, this is a `let` for later
     let favorite = contact.favorite;
 
+    // 当发现提交喜欢之后就现在页面上显示
+    if (fetcher.formData) {
+        favorite = fetcher.formData.get("favorite") === "true";
+    }
+
     return (
         <fetcher.Form method="post">
             <button
