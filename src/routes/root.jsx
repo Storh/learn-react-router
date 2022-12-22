@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 // 使用 Outlet 来在 layout 中标识子路由在哪里渲染
 // 使用 Link 来进行路由的切换
 // 将 Link 更换为 NavLink 来实现根据实际路由进行不同的样式展示
@@ -83,9 +84,16 @@ export default function Root() {
     // 所以需要自己去添加 onload 事件的监听和对路由切换时的处理。
 
     // ******有关数据加载******
-    const { contacts } = useLoaderData();
+    const { contacts, q } = useLoaderData();
 
     const navigation = useNavigation();
+
+    // 对于搜索后，点击返回路由变化但是不触发 input 组件内容变化的解决
+    // 因为给 input 设置 defaultValue 只是在刷新页面的时候控制 input 的内容显示，
+    // 而 input 组件并没有和变量 q 使用 state 进行绑定
+    useEffect(() => {
+        document.getElementById("q").value = q;
+    }, [q]);
 
     // 数据、路由和布局的耦合，所以有了 loader 这个功能，
     // 每个路由都可以定义一个 loader 方法来在元素渲染前获取数据。
@@ -105,6 +113,7 @@ export default function Root() {
                             placeholder="Search"
                             type="search"
                             name="q"
+                            defaultValue={q}
                         />
                         <div
                             id="search-spinner"
@@ -170,5 +179,5 @@ export async function loader({ request }) {
     const url = new URL(request.url);
     const q = url.searchParams.get("q");
     const contacts = await getContacts(q);
-    return { contacts };
+    return { contacts, q };
 }
