@@ -1,5 +1,5 @@
-import { Form, useLoaderData } from "react-router-dom";
-import { getContact } from "../contacts";
+import { Form, useLoaderData, useFetcher } from "react-router-dom";
+import { getContact, updateContact } from "../contacts";
 
 // 可以获取 url 参数的 loader 函数
 export async function loader({ params }) {
@@ -76,11 +76,21 @@ export default function Contact() {
     );
 }
 
+export async function action({ request, params }) {
+    let formData = await request.formData();
+    return updateContact(params.contactId, {
+        favorite: formData.get("favorite") === "true",
+    });
+}
+
 function Favorite({ contact }) {
+    // 使用 fetcher 来对 form 进行提交的好处是不会影响路由堆栈
+    const fetcher = useFetcher();
     // yes, this is a `let` for later
     let favorite = contact.favorite;
+
     return (
-        <Form method="post">
+        <fetcher.Form method="post">
             <button
                 name="favorite"
                 value={favorite ? "false" : "true"}
@@ -92,6 +102,6 @@ function Favorite({ contact }) {
             >
                 {favorite ? "★" : "☆"}
             </button>
-        </Form>
+        </fetcher.Form>
     );
 }
