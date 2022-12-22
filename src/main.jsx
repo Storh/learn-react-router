@@ -24,26 +24,32 @@ const router = createBrowserRouter([
     action: rootAction,
     // 如果我们想使用某个固定的页面布局，需要将内容以 children 的方式来配置
     children: [
-      // 添加当前路由没有进入子路由，处于父路由的时候，布局的 Outlet 应该显示什么内容，也就是设置一个首页的含义
-      { index: true, element: <Index /> },
       {
-        path: "contacts/:contactId",
-        element: <Contact />,
-        loader: contactLoader,
-        action: contactAction,
-      },
-      {
-        path: "contacts/:contactId/edit",
-        element: <EditContact />,
-        loader: contactLoader,
-        action: editAction,
-      },
-      {
-        path: "contacts/:contactId/destroy",
-        action: destroyAction,
-        // 如果一个路由有自己的 报错页面，那么就不会去寻找根路由的错误页面
-        errorElement: <DeleteAgain />,
-      },
+        // 提升子路由的错误页面来优化错误展示，只要子路由页面有错误就会保留根路由 UI
+        errorElement: <ErrorPage />,
+        children: [
+          // 添加当前路由没有进入子路由，处于父路由的时候，布局的 Outlet 应该显示什么内容，也就是设置一个首页的含义
+          { index: true, element: <Index /> },
+          {
+            path: "contacts/:contactId",
+            element: <Contact />,
+            loader: contactLoader,
+            action: contactAction,
+          },
+          {
+            path: "contacts/:contactId/edit",
+            element: <EditContact />,
+            loader: contactLoader,
+            action: editAction,
+          },
+          {
+            path: "contacts/:contactId/destroy",
+            action: destroyAction,
+            // 如果一个路由有自己的 报错页面，那么就不会去寻找根路由的错误页面
+            errorElement: <DeleteAgain />,
+          },
+        ]
+      }
     ],
   },
   // 这种方法添加的路由并不会套用 Root，而是一个新的页面

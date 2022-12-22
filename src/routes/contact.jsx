@@ -3,7 +3,15 @@ import { getContact, updateContact } from "../contacts";
 
 // 可以获取 url 参数的 loader 函数
 export async function loader({ params }) {
-    return getContact(params.contactId);
+    const contact = await getContact(params.contactId);
+    // 发现 id 错误错误之后主动抛出错误
+    if (!contact) {
+        throw new Response("", {
+            status: 404,
+            statusText: "Not Found User",
+        });
+    }
+    return contact;
 }
 
 export default function Contact() {
